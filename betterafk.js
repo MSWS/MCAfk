@@ -1,7 +1,6 @@
 import Discord, { ActivityType, GatewayIntentBits } from 'discord.js';
 import Mineflayer from 'mineflayer';
-
-
+import 'dotenv/config';
 
 // Replace DISCORD_BOT_TOKEN with your bot's token
 const discordClient = new Discord.Client({
@@ -101,7 +100,6 @@ function startClient() {
   });
 
   minecraftClient.on('error', () => {
-    console.log('Error occured, attempting to reconnect');
     console.log('Attempting to reconnect due to error');
     attemptReconnect();
   });
@@ -115,6 +113,12 @@ function startClient() {
     let mention = json.toString().toLowerCase().includes('msws');
     if (json.toString().toLowerCase().startsWith('<msws>') || json.toString().toLowerCase().startsWith('msws') || json.toString().toLowerCase().includes('=(eGO)= MSWS'))
       mention = false;
+    let nameEnd = json.toString().indexOf('»');
+    let nameStart = json.toString().toLowerCase().indexOf('msws');
+    if(nameEnd !== -1 && nameStart !== -1) {
+      if(nameStart < nameEnd)
+        mention = false;
+    }
 
     if (mention)
       discordChannel.send(json.toString() + " <@" + userId + ">");
