@@ -1,5 +1,12 @@
 import Discord, { ActivityType, GatewayIntentBits } from 'discord.js';
 import Mineflayer from 'mineflayer';
+import createRegistry from 'prismarine-registry';
+import createChat from 'prismarine-chat';
+
+const registry = createRegistry('1.20');
+const ChatMessage = createChat(registry);
+const { MessageBuilder } = createChat(registry);
+
 import 'dotenv/config';
 
 // Replace DISCORD_BOT_TOKEN with your bot's token
@@ -63,6 +70,14 @@ discordClient.once('ready', async () => {
     });
 });
 
+discordClient.on('error', (error) => {
+    console.log(error);
+});
+
+process.on('unhandledRejection', error => {
+    console.log(error);
+});
+
 // Connect the Discord bot to Discord
 discordClient.login(process.env.DISCORD_TOKEN);
 
@@ -94,6 +109,7 @@ function startClient() {
             }],
             status: 'online'
         });
+        discordChannel.send(`<@${userId}> Connected!`);
         console.log('Minecraft bot is ready!');
         lastConnect = Date.now();
         retryAttempts = 0;
@@ -104,29 +120,36 @@ function startClient() {
         attemptReconnect();
     });
 
-    minecraftClient.on('messagestr', async (json, position, sender, verified) => {
+    minecraftClient.on('messagestr', async (msg, position, jsonMsg, sender) => {
         if (!discordChannel) {
             discordChannel = await discordClient.channels.fetch(discordChannelId);
         }
         if (!discordChannel) return;
+        console.log(msg);
+        console.log(jsonMsg);
+        console.log(jsonMsg.toString());
+        console.log(sender);
+        msg = msg.trim();
+        if (msg.length == 0)
+            return;
 
-        let mention = json.toString().toLowerCase().includes('msws');
-        if (json.toString().toLowerCase().startsWith('<msws>') || json.toString().toLowerCase().startsWith('msws') || json.toString().toLowerCase().includes('=(eGO)= MSWS'))
+        let mention = msg.toLowerCase().includes('ms');
+        if (msg.toLowerCase().startsWith('ms') || msg.toLowerCase().startsWith('ms') || msg.toLowerCase().includes('=(eGO)= MS'))
             mention = false;
-        let nameEnd = json.toString().indexOf('»');
-        let nameStart = json.toString().toLowerCase().indexOf('msws');
+        let nameEnd = msg.indexOf('»');
+        let nameStart = msg.toLowerCase().indexOf('ms');
         if (nameEnd !== -1 && nameStart !== -1) {
             if (nameStart < nameEnd)
                 mention = false;
         }
 
-        if (json.toString().trim().length == 0)
+        if(msg.length >= 4000)
             return;
 
         if (mention)
-            discordChannel.send(json.toString() + " <@" + userId + ">");
+            discordChannel.send(`${msg} <@${userId}>`);
         else
-            discordChannel.send(json.toString());
+            discordChannel.send(msg);
     });
 }
 
