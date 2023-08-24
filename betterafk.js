@@ -2,6 +2,7 @@ import Discord, { ActivityType, GatewayIntentBits } from 'discord.js';
 import Mineflayer from 'mineflayer';
 import createRegistry from 'prismarine-registry';
 import createChat from 'prismarine-chat';
+import mc from 'minecraft-protocol';
 
 const registry = createRegistry('1.20');
 const ChatMessage = createChat(registry);
@@ -82,6 +83,12 @@ process.on('unhandledRejection', error => {
 discordClient.login(process.env.DISCORD_TOKEN);
 
 function startClient() {
+    // minecraftClient = Mineflayer.createBot(CONNECT_OPTIONS);
+    const client = mc.createClient({
+        profilesFolder: './profiles',
+        ...CONNECT_OPTIONS,
+    })
+    CONNECT_OPTIONS["client"] = client;
     minecraftClient = Mineflayer.createBot(CONNECT_OPTIONS);
     minecraftClient.on('kicked', (reason, loggedIn) => {
         console.log(reason, loggedIn);
@@ -125,10 +132,6 @@ function startClient() {
             discordChannel = await discordClient.channels.fetch(discordChannelId);
         }
         if (!discordChannel) return;
-        console.log(msg);
-        console.log(jsonMsg);
-        console.log(jsonMsg.toString());
-        console.log(sender);
         msg = msg.trim();
         if (msg.length == 0)
             return;
