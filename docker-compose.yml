@@ -10,6 +10,8 @@ services:
       - MC_SERVER_PORT=25565
       - DISCORD_CHANNEL=1056763590520098826
       - DISCORD_AUTHOR=219601562048135168
+    volumes:
+      - ego-mc-data:/node/.minecraft
     secrets:
       - DISCORD_TOKEN
   smpafk:
@@ -22,8 +24,14 @@ services:
       - MC_SERVER_PORT=25597
       - DISCORD_CHANNEL=1143560934955167764
       - DISCORD_AUTHOR=219601562048135168
+    volumes:
+      - smp-mc-data:/node/.minecraft
     secrets:
       - DISCORD_TOKEN
+
+volumes:
+  ego-mc-data:
+  smp-mc-data:
 
 secrets:
   DISCORD_TOKEN:
