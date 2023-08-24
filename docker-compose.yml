@@ -1,4 +1,30 @@
-version: 3
+version: '3'
 services:
-  afk:
-    build: 
+  egoafk:
+    image: ghcr.io/msws/mcafk:latest
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      - MC_EMAIL=imodmaker@gmail.com
+      - MC_SERVER_IP=mine.edgegamers.com
+      - MC_SERVER_PORT=25565
+      - DISCORD_CHANNEL=1056763590520098826
+      - DISCORD_AUTHOR=219601562048135168
+    secrets:
+      - DISCORD_TOKEN
+  smpafk:
+    image: ghcr.io/msws/mcafk:latest
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      - MC_EMAIL=mswsluca@gmail.com
+      - MC_SERVER_IP=play.msws.xyz
+      - MC_SERVER_PORT=25597
+      - DISCORD_CHANNEL=1143560934955167764
+      - DISCORD_AUTHOR=219601562048135168
+    secrets:
+      - DISCORD_TOKEN
+
+secrets:
+  DISCORD_TOKEN:
+    environment: DISCORD_TOKEN
