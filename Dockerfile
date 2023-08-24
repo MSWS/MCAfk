@@ -2,13 +2,11 @@ FROM node:20-alpine AS base
 
 WORKDIR /app
 
-USER node
-
 COPY package*.json ./
-COPY betterafk.js ./
-
-RUN npm install
+RUN npm install --only=production
 
 COPY . .
+
+USER node
 
 CMD ["node", "betterafk.js"]
