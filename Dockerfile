@@ -1,6 +1,9 @@
 FROM node:20-slim AS base
 
-WORKDIR /app
+WORKDIR /usr/src/app
+
+RUN mkdir -p /profiles
+RUN chown -R node:node /usr/src/app/profiles
 
 COPY package*.json ./
 RUN npm install --only=production
@@ -8,7 +11,5 @@ RUN npm install --only=production
 COPY . .
 
 USER node
-
-RUN mkdir -p profiles/
 
 CMD ["node", "betterafk.js"]
