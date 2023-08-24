@@ -9,4 +9,6 @@ COPY . .
 
 USER node
 
+RUN mkdir -p profiles/
+
 CMD ["node", "betterafk.js"]
