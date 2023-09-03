@@ -80,12 +80,12 @@ process.on('unhandledRejection', error => {
 });
 
 // Connect the Discord bot to Discord
-discordClient.login(process.env.DISCORD_TOKEN);
+// discordClient.login(process.env.DISCORD_TOKEN);
 
 function startClient() {
     // minecraftClient = Mineflayer.createBot(CONNECT_OPTIONS);
     const client = mc.createClient({
-        profilesFolder: './profiles',
+        profilesFolder: '/profiles',
         ...CONNECT_OPTIONS,
     })
     CONNECT_OPTIONS["client"] = client;
